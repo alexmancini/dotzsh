@@ -1,0 +1,262 @@
+# ALIASES/FUNCTIONS
+# ==============================================================================
+# Create OS-specific aliases.
+case ${OS} in
+    Darwin)
+        alias ai="brew install"
+        alias aps="brew search"
+        alias aup="brew update && brew upgrade"
+    ;;
+    Linux)
+        alias ai="sudo aptitude install --with-recommends"
+        alias aps="aptitude search"
+        alias apt="aptitude"
+        alias aup="sudo aptitude update && sudo aptitude safe-upgrade"
+
+        add-ppa() {
+            apt-add-repository ppa:$1/ppa
+        }
+    ;;
+esac
+
+# Generic system/shell related aliases:
+alias :q="exit"
+alias M="${PAGER}"
+alias S="sudo -H zsh"
+alias c="cat"
+alias cls="clear"
+alias h="history"
+alias j="jobs"
+mkcd() { mkdir -p "$@" && cd "$@" }
+
+# Preserve file attributes on copy.
+alias cp="cp -a"
+
+# Display filesizes in human-readable format.
+alias df="df -h"
+alias du="du -h"
+
+# Prompt when moving a file that would replace an existing file.
+alias mv="mv -i"
+
+# Grep aliases:
+alias G="grep"
+alias Grep="grep"
+alias egrep="egrep -i --color=auto"
+alias grep="grep -i --color=auto"
+
+# SSH aliases for port 2222:
+alias scp2222="scp -P2222"
+alias ssh2222="ssh -p2222"
+
+# Alias 'c' to be a colorized 'cat' using pygmentize.
+which pygmentize >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+    alias c="pygmentize -g"
+fi
+
+# Screen aliases:
+alias screen="screen -U"
+alias s="screen"
+alias sr="screen -r"
+
+# Override screen aliases with tmux if available.
+which tmux >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+    alias s="tmux"
+    alias sr="tmux attach"
+fi
+
+# Vim aliases:
+alias v="/usr/bin/vim"
+alias im="vim"
+if [ -x /usr/bin/gvimdiff ]; then
+    alias vimdiff="gvimdiff"
+fi
+# ==============================================================================
+
+# DEVELOPMENT ALIASES
+# ==============================================================================
+alias pup='sudo pear update-channels && sudo pear upgrade'
+
+# Phing aliases:
+alias pdall='find `pwd` -name build.xml -exec echo sleep 30 \&\& cd \`dirname {}\` \&\& phing deploy \;|sort|sh'
+alias pd="phing deploy"
+alias pta="phing test analyze"
+alias ptd="phing test deploy"
+alias pt="phing test"
+
+# Ruby-related aliases:
+alias ra="rails"
+alias rdbm="rake db:migrate"
+alias r="rake"
+alias rs="rake spec"
+alias rt="rake test"
+
+alias zf2="alias zf2='export ZF_CONFIG_FILE=~/.zf2.ini; ~/library/zf2/bin/zf.sh'"
+
+# Vagrant aliases:
+alias vag="vagrant"
+alias vup="vagrant up"
+alias vassh="vagrant ssh"
+alias vast="vagrant status"
+
+# Number system conversions:
+# usage: cbase <base from> <base to> <value>
+function cbase() {
+  echo "obase=$2;ibase=$1;$3" | bc
+}
+
+alias bin2dec='cbase 2 10'
+alias dec2bin='cbase 10 2'
+alias dec2hex='cbase 10 16'
+alias hex2dec='cbase 16 10'
+alias hex2bin='cbase 16 2'
+alias dec2oct='cbase 10 8'
+alias oct2dec='cbase 10 8'
+
+# Find aliases:
+alias f=find
+
+# Fix OSX's ridiculous find-with-no-args behavior.
+if [ X"${OS}" = X"Darwin" ]; then
+    function find() {
+        if [ X"${1}" = X"" ]; then
+            /usr/bin/find .
+        else
+            /usr/bin/find $*
+        fi
+    }
+fi
+# ==============================================================================
+
+# GIT ALIASES
+# ==============================================================================
+alias au="git add -u"
+alias bra="git branch -a"
+alias ci="git commit"
+alias ciam="git commit --amend"
+alias dev="git checkout development"
+alias fff="git flow feature finish"
+alias ffs="git flow feature start"
+alias g=git
+alias gd="git diff"
+alias gi=git
+alias gst="git status -s"
+alias gut=git
+alias it=git
+alias lg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+alias master="git checkout master"
+alias pom="git push origin master"
+alias pro="git pull --rebase origin"
+alias prod="git pull --rebase origin development"
+alias prom="git pull --rebase origin master"
+alias pua="git pull --all"
+alias pullod="git pull origin development"
+alias pullom="git pull origin master"
+alias st="git status -s"
+# ==============================================================================
+
+# 'LS' ALIASES/TWEAKS
+# ==============================================================================
+# Set default 'ls' options:
+export LS_OPTS="-F"
+
+# Colorize 'ls' output if possible.
+case ${OS} in
+    FreeBSD|Darwin)
+        LS_OPTS="${LS_OPTS} -G -h"
+        export LSCOLORS="gxfxbxFxbxcxcxBxCxExex"
+        export ZLS_COLORS='no=00:fi=00:di=00;36:ln=00;35:pi=01;35:so=01;31:do=01;35:bd=00;32:cd=04;33:or=40;31;01:ex=00;33:';
+        export LS_O_OPT="-o"
+    ;;
+    Linux|SunOS)
+        LS_OPTS="${LS_OPTS} --color=auto -h --show-control-chars"
+        export LS_COLORS='no=00:fi=00:di=00;36:ln=00;35:pi=01;35:so=01;31:do=01;35:bd=00;32:cd=04;33:or=40;31;01:ex=00;33:';
+        export ZLS_COLORS="${LS_COLORS}"
+    ;;
+esac
+
+# Show hidden files in 'ls' if root.
+if [ X"${EUID}" = X"0" ]; then
+    export LS_OPTS="${LS_OPTS} -A"
+fi
+
+# Aliases:
+alias 2ls='alias ls="/bin/ls ${LS_OPTS}"'
+alias 2lsa='alias ls="ls ${LS_OPTS} -A"'
+alias la="ls -A"
+alias ls="ls ${LS_OPTS}"
+alias lsa="ls -A"
+alias lsd="ls -d */"
+alias lsl="ls -l ${LS_O_OPT}"
+alias lslS="lsl -S"
+alias lslT="lsl -t"
+alias lsla="ls -la"
+alias lsld="/bin/ls ${LS_OPTS#-F} ${LS_O_OPT} -ld *(/)"
+alias lsls="lsl -S -r"
+alias lslt="lsl -t -r"
+# ==============================================================================
+
+# TAR ALIASES/TWEAKS
+# ==============================================================================
+# Use pipeviewer to show progress if available.
+which pv >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+    tcz() {
+        tarout=$1
+        shift
+        argsBytes=$(/usr/bin/du -sck $@ 2>/dev/null | tail -n 1 | cut -f1)
+        tar -pcf - $@ | pv -s "${argsBytes}k" | gzip > $tarout
+    }
+
+    txz() {
+        pv $@ | tar -zxf -
+    }
+
+    tcj() {
+        tarout=$1
+        shift
+        argsBytes=$(/usr/bin/du -sck $@ 2>/dev/null | tail -n 1 | cut -f1)
+        tar -pcf - $@ | pv -s "${argsBytes}k" | bzip2 > $tarout
+    }
+    txj() {
+        pv $@ | tar -jxf -
+    }
+
+    snapdir() {
+        tar -cf - . 2>/dev/null | pv -s "$(/usr/bin/du -sck . | tail -n 1 | cut -f1)k" | bzip2 > ../$(basename `pwd`)-$(date +'%Y%m%d%H%M%S').tar.bz2
+    }
+
+    snapdirz() {
+        tar -cf - . 2>/dev/null | pv -s "$(/usr/bin/du -sck . | tail -n 1 | cut -f1)k" | gzip > ../$(basename `pwd`)-$(date +'%Y%m%d%H%M%S').tar.gz
+    }
+else
+    alias tcz='tar -czvf'
+    alias txz='tar -zxvf'
+
+    alias tcj='tar -cjvf'
+    alias txj='tar -jxvf'
+
+    alias snapdir='tar -cf - . 2>/dev/null | bzip2 > ../$(basename `pwd`)-$(date +'%Y%m%d-%H%M%S').tar.bz2'
+    alias snapdirz='tar -cf - . 2>/dev/null | gzip > ../$(basename `pwd`)-$(date +'%Y%m%d-%H%M%S').tar.gz'
+fi
+# ==============================================================================
+
+# SUFFIX ALIASES
+# ==============================================================================
+# Open everything with vim!
+# These allow you to open a file in vim just by entering the filename, e.g.:
+# $ readme.md
+alias -s php=v
+alias -s xml=v
+alias -s js=v
+alias -s css=v
+alias -s twig=v
+alias -s c=v
+alias -s cpp=v
+alias -s scala=v
+alias -s java=v
+alias -s yml=v
+alias -s md=v
+# ==============================================================================

@@ -1,0 +1,83 @@
+# Use vi-style keybindings.
+bindkey -v
+
+# Suspend and background a job using ctrl-Z.
+# From: http://superuser.com/questions/378018
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    bg
+    zle redisplay
+  else
+    zle push-input
+  fi
+}
+
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
+
+# Use ctrl-S to rerun the current (or last) command through sudo.
+bindkey "^S" sudo-command-line
+
+# Use ctrl-G to rerun the current (or last) command through grep.
+append_grep () {
+    [[ -z $BUFFER ]] && zle up-history
+    [[ $BUFFER != *\ \|\ grep\ * ]] && BUFFER="$BUFFER | grep "
+    zle end-of-line
+}
+
+zle -N append-grep append_grep
+bindkey "^G" append-grep
+
+# Use ctrl-L to rerun the current (or last) command through wc -l.
+append_linecount () {
+    [[ -z $BUFFER ]] && zle up-history
+    [[ $BUFFER != *\ \|\ wc\ -l ]] && BUFFER="$BUFFER | wc -l"
+    zle end-of-line
+}
+
+zle -N append-linecount append_linecount
+bindkey "^L" append-linecount
+
+# Use ctrl-O to rerun the current (or last) command through sort.
+append_sort () {
+    [[ -z $BUFFER ]] && zle up-history
+    [[ $BUFFER != *\ \|\ sort ]] && BUFFER="$BUFFER | sort"
+    zle end-of-line
+}
+
+zle -N append-sort append_sort
+bindkey "^O" append-sort
+
+# Use ctrl-T to rerun the current (or last) command through sudo.
+insert_time () {
+    [[ -z $BUFFER ]] && zle up-history
+    [[ $BUFFER != time\ * ]] && BUFFER="time $BUFFER"
+    zle end-of-line
+}
+
+zle -N insert-time insert_time
+bindkey "^T" insert-time
+
+# Use ctrl-U to rerun the current (or last) command through uniq.
+append_uniq () {
+    [[ -z $BUFFER ]] && zle up-history
+    [[ $BUFFER != *\ \|\ uniq ]] && BUFFER="$BUFFER | uniq"
+    zle end-of-line
+}
+
+zle -N append-uniq append_uniq
+bindkey "^U" append-uniq
+
+# Use incremental searching.
+bindkey '^P' history-incremental-search-backward
+bindkey '^N' history-incremental-search-forward
+bindkey -M vicmd '/' history-incremental-pattern-search-backward
+
+# Bind + to add an item from the list without closing the menu.
+bindkey -M menuselect "+" accept-and-menu-complete
+
+# Use ctrl-E to edit the command-line in the default editor.
+autoload edit-command-line && zle -N edit-command-line
+bindkey '^E' edit-command-line
+
+# vim: set ft=sh

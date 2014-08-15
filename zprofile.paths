@@ -1,0 +1,25 @@
+# Set initial path (needed for 'uname', etc.):
+export PATH="/bin:/sbin:${HOME}/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/usr/games"
+
+# Setup rbenv if found.
+if [ -d "${HOME}/.rbenv/bin" ]; then
+    export PATH="$PATH:${HOME}/.rbenv/bin"
+    eval "$(rbenv init -|grep -v rehash)" >/dev/null 2>&1
+fi
+
+# Setup common OSX paths.
+if [ -d "/opt/local/bin" ]; then
+    export PATH="$PATH:/opt/local/bin:/opt/local/sbin"
+fi
+
+if [ -d "/opt/local/node/bin" ]; then
+    export PATH="$PATH:/opt/local/node/bin"
+fi
+
+if [ -x "/usr/local/opt/python/bin/python" ]; then
+    export VIRTUALENVWRAPPER_PYTHON="/usr/local/opt/python/bin/python"
+fi
+
+export _ZPROFILE_PATHS_LOADED=1
+
+# vim: set ft=sh
