@@ -42,6 +42,7 @@ alias mv="mv -i"
 # Grep aliases:
 alias G="grep"
 alias Grep="grep"
+alias gerp="grep"
 alias egrep="egrep -i --color=auto"
 alias grep="grep -i --color=auto"
 

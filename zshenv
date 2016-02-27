@@ -49,14 +49,17 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(               \
-    autoenv             \
+    adb                 \
     autopep8            \
     bower               \
     brew                \
+    brew-cask           \
     bundler             \
     capistrano          \
     coffee              \
     colored-man         \
+    docker              \
+    docker-compose      \
     encode64            \
     fabric              \
     gem                 \
@@ -64,18 +67,23 @@ plugins=(               \
     git-flow-avh        \
     golang              \
     gradle              \
-    heroku              \
+    grails              \
+    grunt               \
+    gulp                \
+    laravel5            \
     lein                \
     mvn                 \
+    nmap                \
+    node                \
     npm                 \
     osx                 \
     pep8                \
-    phing               \
     pip                 \
     pylint              \
     python              \
     rake                \
     rails               \
+    ruby                \
     sbt                 \
     scala               \
     sudo                \
@@ -84,7 +92,6 @@ plugins=(               \
     vagrant             \
     vi-mode             \
     virtualenv          \
-    virtualenvwrapper   \
     yum                 \
 )
 
